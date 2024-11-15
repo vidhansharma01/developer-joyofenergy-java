@@ -12,7 +12,7 @@ plugins {
 
 java {
     toolchain {
-        languageVersion.set(JavaLanguageVersion.of(21))
+        languageVersion.set(JavaLanguageVersion.of(17))
     }
 }
 
@@ -69,6 +69,9 @@ dependencies {
     testImplementation("org.springframework.boot:spring-boot-starter-test") {
         exclude (group = "org.junit.vintage", module = "junit-vintage-engine")
     }
+    runtimeOnly ("com.h2database:h2")
+    compileOnly ("org.projectlombok:lombok:1.18.20")
+    annotationProcessor ("org.projectlombok:lombok:1.18.20")
 }
 
 tasks.named<Test>("test") {

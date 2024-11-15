@@ -1,7 +1,5 @@
 package uk.tw.energy.controller;
 
-import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-
 import java.math.BigDecimal;
 import java.time.Instant;
 import java.util.AbstractMap;
@@ -15,8 +13,12 @@ import org.springframework.http.ResponseEntity;
 import uk.tw.energy.domain.ElectricityReading;
 import uk.tw.energy.domain.PricePlan;
 import uk.tw.energy.service.AccountService;
+import uk.tw.energy.service.CostService;
 import uk.tw.energy.service.MeterReadingService;
 import uk.tw.energy.service.PricePlanService;
+
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+
 
 public class PricePlanComparatorControllerTest {
     private static final String WORST_PLAN_ID = "worst-supplier";
@@ -26,16 +28,18 @@ public class PricePlanComparatorControllerTest {
     private PricePlanComparatorController controller;
     private MeterReadingService meterReadingService;
     private AccountService accountService;
+    private CostService costService;
 
     @BeforeEach
     public void setUp() {
         meterReadingService = new MeterReadingService(new HashMap<>());
+        costService = new CostService();
 
         PricePlan pricePlan1 = new PricePlan(WORST_PLAN_ID, null, BigDecimal.TEN, null);
         PricePlan pricePlan2 = new PricePlan(BEST_PLAN_ID, null, BigDecimal.ONE, null);
         PricePlan pricePlan3 = new PricePlan(SECOND_BEST_PLAN_ID, null, BigDecimal.valueOf(2), null);
         List<PricePlan> pricePlans = List.of(pricePlan1, pricePlan2, pricePlan3);
-        PricePlanService pricePlanService = new PricePlanService(pricePlans, meterReadingService);
+        PricePlanService pricePlanService = new PricePlanService(pricePlans, meterReadingService, costService);
 
         accountService = new AccountService(Map.of(SMART_METER_ID, WORST_PLAN_ID));
 
